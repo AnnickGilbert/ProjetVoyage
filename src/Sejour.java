@@ -38,7 +38,15 @@ public class Sejour {
         this.type = type;
     }
 
-    /**
+    public Sejour(String id2, java.util.Date date, java.util.Date date2, String type2) {
+        this.id = id2;
+        this.dateEntree = new Date(date.getTime());
+        this.dateSortie = new Date(date2.getTime());
+        this.type = type2;
+        
+	}
+
+	/**
      * getter pour l'attribut id
      * @return valeur de l'identifiant du séjour
      */

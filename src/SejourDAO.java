@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.Date;
 
 /**
  * Classe d'accès aux données contenues dans la table sejour
@@ -148,7 +149,13 @@ public class SejourDAO {
         SejourDAO sejourDAO = new SejourDAO();
 
         // Test de la méthode ajouter
-        Sejour s = new Sejour("SEJ001", new java.util.Date(), new java.util.Date(), "hotel");
+         /*public Sejour(String id, Date dateEntree, Date dateSortie, String type) {
+         this.id = id;
+         this.dateEntree = dateEntree;
+         this.dateSortie = dateSortie;
+         this.type = type;
+         } */
+        Sejour s = new Sejour("SEJ001", new java.util.Date(), new java.util.Date(), "type1");
         int retour = sejourDAO.ajouter(s);
         System.out.println(retour + " lignes ajoutées");
 
