@@ -36,14 +36,13 @@ public class ReservationDAO {
         try {
             con = DriverManager.getConnection(URL, LOGIN, PASS);
             // Prepare SQL statement for inserting a reservation
-            ps = con.prepareStatement("INSERT INTO reservation (id, dateReservation, dateAnnulation, prix, client_id, sejour_id, voyage_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            ps = con.prepareStatement("INSERT INTO reservation (id, dateReservation, prix, client_id, sejour_id, voyage_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, newReservation.getId());
             ps.setDate(2, java.sql.Date.valueOf(newReservation.getDateReservation()));
-            ps.setDate(3, java.sql.Date.valueOf(newReservation.getDateAnnulation()));
-            ps.setString(4, newReservation.getPrix());
-            ps.setString(5, newReservation.getClientId());
-            ps.setString(6, newReservation.getSejourId());
-            ps.setString(7, newReservation.getVoyageId());
+            ps.setString(3, newReservation.getPrix());
+            ps.setString(4, newReservation.getClientId());
+            ps.setString(5, newReservation.getSejourId());
+            ps.setString(6, newReservation.getVoyageId());
 
             // Execute the update and get the affected rows
             retour = ps.executeUpdate();
@@ -83,7 +82,6 @@ public class ReservationDAO {
                 retour = new Reservation(
                     rs.getString("id"),
                     rs.getDate("dateReservation").toLocalDate(),
-                    rs.getDate("dateAnnulation").toLocalDate(),
                     rs.getString("prix"),
                     rs.getString("client_id"),
                     rs.getString("sejour_id"),
@@ -125,37 +123,46 @@ public class ReservationDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 reservations.add(new Reservation(
-                    rs.getString("id"),
-                    rs.getDate("dateReservation").toLocalDate(),
-                    rs.getDate("dateAnnulation").toLocalDate(),
-                    rs.getString("prix"),
-                    rs.getString("client_id"),
-                    rs.getString("sejour_id"),
-                    rs.getString("voyage_id")
-                ));
+                        rs.getString("id"),
+                        rs.getDate("dateReservation").toLocalDate(),
+                        rs.getString("prix"),
+                        rs.getString("client_id"),
+                        rs.getString("sejour_id"),
+                        rs.getString("voyage_id")));
             }
         } catch (SQLException ee) {
             ee.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-            } catch (SQLException e) {}
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException e) {
+            }
             try {
-                if (ps != null) ps.close();
-            } catch (SQLException e) {}
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+            }
             try {
-                if (con != null) con.close();
-            } catch (SQLException e) {}
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+            }
         }
         return reservations;
     }
+
+    //getReservation(id)
+
+    
+
 
     // Main method for testing
     public static void main(String[] args) {
         ReservationDAO reservationDAO = new ReservationDAO();
 
         // Test adding a new reservation
-        Reservation r = new Reservation("R001", java.time.LocalDate.of(2025, 2, 1), java.time.LocalDate.of(2025, 2, 5), "200.00", "C001", "S001", "V001");
+        Reservation r = new Reservation("R001", java.time.LocalDate.of(2025, 2, 1), "200.00", "C001", "S001", "V001");
         int retour = reservationDAO.ajouter(r);
         System.out.println(retour + " ligne(s) ajoutée(s)");
 

@@ -106,6 +106,8 @@ CREATE TABLE `voyage` (
   `id` VARCHAR(50) NOT NULL,
   `dateDepart` DATE NOT NULL,
   `dateArrivee` DATE NOT NULL,
+  `heureDepart` TIME NOT NULL,
+  `heureArrivee` TIME NOT NULL,
   `villeDepart_id` VARCHAR(50) NOT NULL,
   `villeArrivee_id` VARCHAR(50) NOT NULL,
   `MoyenTransport_id` VARCHAR(50) NOT NULL,
@@ -115,24 +117,23 @@ CREATE TABLE `voyage` (
   FOREIGN KEY (`MoyenTransport_id`) REFERENCES `MoyenTransport` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `voyage` (`id`, `villeDepart_id`, `villeArrivee_id`, `MoyenTransport_id`) VALUES
-('1', '1', '2', '1'),
-('2', '2', '3', '2'),
-('3', '3', '4', '3'),
-('4', '4', '5', '1'),
-('5', '5', '6', '2'),
-('6', '6', '7', '3'),
-('7', '7', '8', '1'),
-('8', '8', '9', '2'),
-('9', '9', '10', '3'),
-('10', '10', '11', '1');
+INSERT INTO `voyage` (`id`, `dateDepart`, `dateArrivee`, `heureDepart`, `heureArrivee`, `villeDepart_id`, `villeArrivee_id`, `MoyenTransport_id`) VALUES
+('1', '2023-09-01', '2023-09-02', '08:00:00', '10:00:00', '1', '2', '1'),
+('2', '2023-09-02', '2023-09-03', '09:00:00', '11:00:00', '2', '3', '2'),
+('3', '2023-09-03', '2023-09-04', '10:00:00', '12:00:00', '3', '4', '3'),
+('4', '2023-09-04', '2023-09-05', '11:00:00', '13:00:00', '4', '5', '1'),
+('5', '2023-09-05', '2023-09-06', '12:00:00', '14:00:00', '5', '6', '2'),
+('6', '2023-09-06', '2023-09-07', '13:00:00', '15:00:00', '6', '7', '3'),
+('7', '2023-09-07', '2023-09-08', '14:00:00', '16:00:00', '7', '8', '1'),
+('8', '2023-09-08', '2023-09-09', '15:00:00', '17:00:00', '8', '9', '2'),
+('9', '2023-09-09', '2023-09-10', '16:00:00', '18:00:00', '9', '10', '3'),
+('10', '2023-09-10', '2023-09-11', '17:00:00', '19:00:00', '10', '11', '1');
 
 -- Table structure for table `reservation`
 DROP TABLE IF EXISTS `reservation`;
 CREATE TABLE `reservation` (
   `id` VARCHAR(50) NOT NULL,
   `dateReservation` DATE NOT NULL,
-  `dateAnnulation` DATE NOT NULL,
   `prix` VARCHAR(50) NOT NULL,
   `client_id` VARCHAR(50) NOT NULL,
   `sejour_id` VARCHAR(50) NOT NULL,
@@ -143,14 +144,14 @@ CREATE TABLE `reservation` (
   FOREIGN KEY (`voyage_id`) REFERENCES `voyage` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `reservation` (`id`, `dateReservation`, `dateAnnulation`, `prix`, `client_id`, `sejour_id`, `voyage_id`) VALUES
-('1', '2023-09-01', '2023-09-05', '500', '1', '1', '1'),
-('2', '2023-09-02', '2023-09-07', '600', '2', '2', '2'),
-('3', '2023-09-03', '2023-09-08', '700', '3', '3', '3'),
-('4', '2023-09-04', '2023-09-09', '800', '4', '4', '4'),
-('5', '2023-09-05', '2023-09-10', '900', '5', '5', '5'),
-('6', '2023-09-06', '2023-09-11', '1000', '6', '6', '6'),
-('7', '2023-09-07', '2023-09-12', '1100', '7', '7', '7'),
-('8', '2023-09-08', '2023-09-13', '1200', '8', '8', '8'),
-('9', '2023-09-09', '2023-09-14', '1300', '9', '9', '9'),
-('10', '2023-09-10', '2023-09-15', '1400', '10', '10', '10');
+INSERT INTO `reservation` (`id`, `dateReservation`, `prix`, `client_id`, `sejour_id`, `voyage_id`) VALUES
+('1', '2023-09-01', '100', '1', '1', '1'),
+('2', '2023-09-02', '200', '2', '2', '2'),
+('3', '2023-09-03', '300', '3', '3', '3'),
+('4', '2023-09-04', '400', '4', '4', '4'),
+('5', '2023-09-05', '500', '5', '5', '5'),
+('6', '2023-09-06', '600', '6', '6', '6'),
+('7', '2023-09-07', '700', '7', '7', '7'),
+('8', '2023-09-08', '800', '8', '8', '8'),
+('9', '2023-09-09', '900', '9', '9', '9'),
+('10', '2023-09-10', '1000', '10', '10', '10');

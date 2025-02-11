@@ -3,21 +3,22 @@ import java.time.LocalDate;
 public class Reservation {
     private String id;
     private LocalDate dateReservation;
-    private LocalDate dateAnnulation;
     private String prix;
     private String clientId;
     private String sejourId;
     private String voyageId;
 
-    public Reservation(String id, LocalDate dateReservation, LocalDate dateAnnulation, String prix, String clientId, String sejourId, String voyageId) {
+    public Reservation(String id, LocalDate dateReservation, String prix, String clientId,
+            String sejourId, String voyageId) {
         this.id = id;
         this.dateReservation = dateReservation;
-        this.dateAnnulation = dateAnnulation;
         this.prix = prix;
         this.clientId = clientId;
         this.sejourId = sejourId;
         this.voyageId = voyageId;
     }
+    //Reservation reservation = new Reservation(designation, prix, quantite);
+    
 
     public String getId() {
         return id;
@@ -25,10 +26,6 @@ public class Reservation {
 
     public LocalDate getDateReservation() {
         return dateReservation;
-    }
-
-    public LocalDate getDateAnnulation() {
-        return dateAnnulation;
     }
 
     public String getPrix() {
@@ -49,7 +46,7 @@ public class Reservation {
 
     @Override
     public String toString() {
-        return "Reservation{id='" + id + "', dateReservation=" + dateReservation + ", dateAnnulation=" + dateAnnulation +
+        return "Reservation{id='" + id + "', dateReservation=" + dateReservation +
                ", prix='" + prix + "', clientId='" + clientId + "', sejourId='" + sejourId + "', voyageId='" + voyageId + "'}";
     }
 }
