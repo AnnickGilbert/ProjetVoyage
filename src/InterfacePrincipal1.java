@@ -62,6 +62,16 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
             }
         });
 
+        // Action sur le bouton "Ajouter une réservation"
+        buttonAjouterReservation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Ouvrir la fenêtre pour ajouter une réservation
+                new AjoutReservationFenetre();
+            }
+        });
+        
+
         contentPanel.add(panelBouttons);
 
         // Création de la table
