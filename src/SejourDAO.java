@@ -17,7 +17,7 @@ public class SejourDAO {
      * Paramètres de connexion à la base de données MySQL
      * URL, LOGIN et PASS sont des constantes
      */
-    static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
+    static final String URL = "jdbc:mysql://localhost:3306/bddvoyage?serverTimezone=Europe/Paris";
     static final String LOGIN = "root";
     static final String PASS = "";
 
@@ -149,12 +149,7 @@ public class SejourDAO {
         SejourDAO sejourDAO = new SejourDAO();
 
         // Test de la méthode ajouter
-         /*public Sejour(String id, Date dateEntree, Date dateSortie, String type) {
-         this.id = id;
-         this.dateEntree = dateEntree;
-         this.dateSortie = dateSortie;
-         this.type = type;
-         } */
+         
         Sejour s = new Sejour("SEJ001", new java.util.Date(), new java.util.Date(), "type1");
         int retour = sejourDAO.ajouter(s);
         System.out.println(retour + " lignes ajoutées");

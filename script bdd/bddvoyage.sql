@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `stocks`;
-USE `stocks`;
+CREATE DATABASE IF NOT EXISTS `bddvoyage`;
+USE `bddvoyage`;
 
 -- Table structure for table `ville`
 DROP TABLE IF EXISTS `ville`;

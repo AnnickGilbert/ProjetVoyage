@@ -17,7 +17,7 @@ public class ClientDAO {
      * Param�tres de connexion � la base de donn�es MySQL
      * URL, LOGIN et PASS sont des constantes
      */
-    static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
+    static final String URL = "jdbc:mysql://localhost:3306/bddvoyage?serverTimezone=Europe/Paris";
     static final String LOGIN = "root";
     static final String PASS = "";
 

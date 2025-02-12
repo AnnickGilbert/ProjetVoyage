@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MoyenTransportDAO {
-	static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
+	static final String URL = "jdbc:mysql://localhost:3306/bddvoyage?serverTimezone=Europe/Paris";
 
 	   static final String LOGIN = "root";
 	   static final String PASS = "";

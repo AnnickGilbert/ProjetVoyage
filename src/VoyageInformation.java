@@ -2,6 +2,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 
 public class VoyageInformation {
+    private String id;
     private String villeDepart;
     private String villeArrivee;
     private LocalDate dateDepart;
@@ -15,7 +16,10 @@ public class VoyageInformation {
     private String typeSejour;
 
     // Constructeur
-    public VoyageInformation(String villeDepart, String villeArrivee, LocalDate dateDepart, LocalDate dateArrivee, String heureDepart, String heureArrivee, String moyenTransport, double prix, String clientNom, String clientPrenom, String typeSejour) {
+    public VoyageInformation(String id, String villeDepart, String villeArrivee, LocalDate dateDepart,
+            LocalDate dateArrivee, String heureDepart, String heureArrivee, String moyenTransport, double prix,
+            String clientNom, String clientPrenom, String typeSejour) {
+        this.id = id;
         this.villeDepart = villeDepart;
         this.villeArrivee = villeArrivee;
         this.dateDepart = dateDepart;
@@ -28,10 +32,17 @@ public class VoyageInformation {
         this.clientPrenom = clientPrenom;
         this.typeSejour = typeSejour;
     }
+    
 
     // Getters and Setters
     public String getVilleDepart() {
         return villeDepart;
+    }
+
+    //getid
+
+    public String getId() {
+        return id;
     }
 
     public void setVilleDepart(String villeDepart) {

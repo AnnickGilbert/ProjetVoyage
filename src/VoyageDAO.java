@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class VoyageDAO {
 
     // Database connection parameters
-    static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
+    static final String URL = "jdbc:mysql://localhost:3306/bddvoyage?serverTimezone=Europe/Paris";
     static final String LOGIN = "root";
     static final String PASS = "";
 
@@ -30,14 +30,7 @@ public class VoyageDAO {
         Connection con = null;
         PreparedStatement ps = null;
         
-        /*private String id;
-        private LocalDate dateDepart;
-        private LocalDate dateArrivee;
-        private String heureDepart;
-        private String heureArrivee;
-        private String villeDepartId;
-        private String villeArriveeId;
-        private String moyenTransportId; */
+       
 
         // Connect to the database
         try {
@@ -199,34 +192,58 @@ public int countVoyage() {
         return retour;
     }
 
+    //supmerimer un voyage
+    public void supprimer(String id) {
+        Connection con = null;
+        PreparedStatement ps = null;
 
+        try {
+            con = DriverManager.getConnection(URL, LOGIN, PASS);
+            ps = con.prepareStatement("DELETE FROM voyage WHERE id = ?");
+            ps.setString(1, id);
+            ps.executeUpdate();
+        } catch (SQLException ee) {
+            ee.printStackTrace();
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void supprimerReservationByVoyageId(String voyageId) {
+    Connection con = null;
+    PreparedStatement ps = null;
+    try {
+        con = DriverManager.getConnection(URL, LOGIN, PASS);
+        ps = con.prepareStatement("DELETE FROM reservation WHERE voyage_id = ?");
+        ps.setString(1, voyageId);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (ps != null) ps.close();
+            if (con != null) con.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+    
 
 
          // Main method for testing
     public static void main(String[] args) {
-        VoyageDAO voyageDAO = new VoyageDAO();
-        System.out.println("Nombre de voyages : " + voyageDAO.countVoyage());
-        /*public Voyage(String id, LocalDate dateDepart, LocalDate dateArrivee,String heureDepart, String heureArrivee,  String villeDepartId, String villeArriveeId, String moyenTransportId) {
-        this.id = id;
-        this.dateDepart = dateDepart;
-        this.dateArrivee = dateArrivee;
-        this.villeDepartId = villeDepartId;
-        this.villeArriveeId = villeArriveeId;
-        this.heureDepart = heureDepart.toString();
-        this.heureArrivee = heureArrivee.toString();
-        this.moyenTransportId = moyenTransportId;
-    } */
-        // Test adding a new voyage
-        Voyage v = new Voyage("34", LocalDate.now(), LocalDate.now(), "12:00", "14:00", "1", "2", "1");
-        voyageDAO.ajouter(v);
-        System.out.println("Nombre de voyages : " + voyageDAO.countVoyage());
-        //prin localDate
-        System.out.println(LocalDate.now());
-        //test list vills
-        String[] villes = voyageDAO.listVille();
-        for (int i = 0; i < villes.length; i++) {
-            System.out.println(villes[i]);
-        }
+        //test suppimer
+        VoyageDAO dao = new VoyageDAO();
+        dao.supprimer("1");
+        //test listVoyage
         
         
     }
