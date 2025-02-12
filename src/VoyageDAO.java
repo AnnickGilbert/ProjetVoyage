@@ -5,40 +5,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+/**
+ * La classe `VoyageDAO` permet d'interagir avec la base de données pour effectuer des opérations sur les voyages.
+ * Elle inclut des méthodes pour ajouter, supprimer, lister des voyages, compter le nombre de voyages et gérer des réservations.
+ */
 public class VoyageDAO {
 
-    // Database connection parameters
+    // Paramètres de connexion à la base de données
     static final String URL = "jdbc:mysql://localhost:3306/bddvoyage?serverTimezone=Europe/Paris";
     static final String LOGIN = "root";
     static final String PASS = "";
 
-    // Constructor for initializing the driver
+    /**
+     * Constructeur de la classe `VoyageDAO`.
+     * Il charge le driver JDBC pour la base de données.
+     */
     public VoyageDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            System.err.println("Unable to load database driver, make sure the .jar file is imported.");
+            System.err.println("Impossible de charger le driver de la base de données, assurez-vous d'importer le fichier .jar.");
         }
     }
 
     /**
-     * Adds a new voyage to the database.
-     * @param nouveauVoyage the voyage to add.
-     * @return the number of rows affected (should be 1 if successful).
+     * Ajoute un nouveau voyage dans la base de données.
+     * 
+     * @param nouveauVoyage le voyage à ajouter.
      */
     public void ajouter(Voyage nouveauVoyage) {
         Connection con = null;
         PreparedStatement ps = null;
-        
-       
 
-        // Connect to the database
         try {
             con = DriverManager.getConnection(URL, LOGIN, PASS);
-            // Prepare SQL statement for inserting a voyage
             ps = con.prepareStatement(
                     "INSERT INTO voyage (id, dateDepart, dateArrivee, heureDepart, heureArrivee, villeDepart_id, villeArrivee_id, moyenTransport_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            // Set the parameters of the SQL statement
             ps.setString(1, nouveauVoyage.getId());
             ps.setString(2, nouveauVoyage.getDateDepart().toString());
             ps.setString(3, nouveauVoyage.getDateArrivee().toString());
@@ -48,57 +50,58 @@ public class VoyageDAO {
             ps.setString(7, nouveauVoyage.getVilleArriveeId());
             ps.setString(8, nouveauVoyage.getMoyenTransportId());
 
-
-            // Execute the update and get the affected rows
+            // Exécute la mise à jour
             ps.executeUpdate();
         } catch (SQLException ee) {
             ee.printStackTrace();
         } finally {
             try {
-                if (ps != null)
-                    ps.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
-            }
-            try {
-                if (con != null)
-                    con.close();
-            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        
     }
 
-    //compter le nombre de voyages
-    // Count the number of voyages
-public int countVoyage() {
-    Connection con = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    int retour = 0;
+    /**
+     * Compte le nombre total de voyages dans la base de données.
+     * 
+     * @return le nombre de voyages.
+     */
+    public int countVoyage() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int retour = 0;
 
-    try {
-        con = DriverManager.getConnection(URL, LOGIN, PASS);
-        // Use executeQuery instead of executeUpdate for SELECT queries
-        ps = con.prepareStatement("SELECT COUNT(*) FROM voyage");
-        rs = ps.executeQuery();  // This will execute the SELECT query
-        
-        if (rs.next()) {
-            retour = rs.getInt(1);  // Get the result (count)
-        }
-    } catch (SQLException ee) {
-        ee.printStackTrace();
-    } finally {
         try {
-            if (rs != null) rs.close();  // Close ResultSet
-            if (ps != null) ps.close();  // Close PreparedStatement
-            if (con != null) con.close();  // Close Connection
-        } catch (SQLException e) {
-            e.printStackTrace();
+            con = DriverManager.getConnection(URL, LOGIN, PASS);
+            ps = con.prepareStatement("SELECT COUNT(*) FROM voyage");
+            rs = ps.executeQuery();  // Exécute la requête SELECT
+            
+            if (rs.next()) {
+                retour = rs.getInt(1);  // Récupère le résultat (compte)
+            }
+        } catch (SQLException ee) {
+            ee.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return retour;
     }
-    return retour;
-}
-    //list des nom de ville
+
+    /**
+     * Récupère la liste des noms de villes disponibles dans la base de données.
+     * 
+     * @return un tableau de chaînes de caractères contenant les noms des villes.
+     */
     public String[] listVille() {
         Connection con = null;
         PreparedStatement ps = null;
@@ -126,8 +129,14 @@ public int countVoyage() {
             }
         }
         return retour;
-    }    
-    //get id by name
+    }
+
+    /**
+     * Récupère l'ID d'une ville à partir de son nom.
+     * 
+     * @param name le nom de la ville.
+     * @return l'ID de la ville correspondante.
+     */
     public static String getIdByName(String name) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -146,19 +155,21 @@ public int countVoyage() {
             ee.printStackTrace();
         } finally {
             try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (con != null)
-                    con.close();
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return retour;
     }
-    //get list voyage 
+
+    /**
+     * Récupère la liste des voyages disponibles dans la base de données.
+     * 
+     * @return un tableau d'objets `Voyage`.
+     */
     public Voyage[] listVoyage() {
         Connection con = null;
         PreparedStatement ps = null;
@@ -171,20 +182,24 @@ public int countVoyage() {
             rs = ps.executeQuery();
             int i = 0;
             while (rs.next()) {
-                retour[i] = new Voyage(rs.getString("id"), LocalDate.parse(rs.getString("dateDepart")), LocalDate.parse(rs.getString("dateArrivee")), rs.getString("heureDepart"), rs.getString("heureArrivee"), rs.getString("villeDepart_id"), rs.getString("villeArrivee_id"), rs.getString("moyenTransport_id"));
+                retour[i] = new Voyage(
+                        rs.getString("id"),
+                        LocalDate.parse(rs.getString("dateDepart")),
+                        LocalDate.parse(rs.getString("dateArrivee")),
+                        rs.getString("heureDepart"),
+                        rs.getString("heureArrivee"),
+                        rs.getString("villeDepart_id"),
+                        rs.getString("villeArrivee_id"),
+                        rs.getString("moyenTransport_id"));
                 i++;
             }
-
         } catch (SQLException ee) {
             ee.printStackTrace();
         } finally {
             try {
-                if (rs != null)
-                    rs.close();
-                if (ps != null)
-                    ps.close();
-                if (con != null)
-                    con.close();
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -192,7 +207,11 @@ public int countVoyage() {
         return retour;
     }
 
-    //supmerimer un voyage
+    /**
+     * Supprime un voyage à partir de son ID.
+     * 
+     * @param id l'ID du voyage à supprimer.
+     */
     public void supprimer(String id) {
         Connection con = null;
         PreparedStatement ps = null;
@@ -206,45 +225,37 @@ public int countVoyage() {
             ee.printStackTrace();
         } finally {
             try {
-                if (ps != null)
-                    ps.close();
-                if (con != null)
-                    con.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    /**
+     * Supprime les réservations associées à un voyage à partir de son ID.
+     * 
+     * @param voyageId l'ID du voyage pour lequel les réservations doivent être supprimées.
+     */
     public void supprimerReservationByVoyageId(String voyageId) {
-    Connection con = null;
-    PreparedStatement ps = null;
-    try {
-        con = DriverManager.getConnection(URL, LOGIN, PASS);
-        ps = con.prepareStatement("DELETE FROM reservation WHERE voyage_id = ?");
-        ps.setString(1, voyageId);
-        ps.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    } finally {
+        Connection con = null;
+        PreparedStatement ps = null;
+
         try {
-            if (ps != null) ps.close();
-            if (con != null) con.close();
+            con = DriverManager.getConnection(URL, LOGIN, PASS);
+            ps = con.prepareStatement("DELETE FROM reservation WHERE voyage_id = ?");
+            ps.setString(1, voyageId);
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-    }
-}
-
-    
-
-
-         // Main method for testing
-    public static void main(String[] args) {
-        //test suppimer
-        VoyageDAO dao = new VoyageDAO();
-        dao.supprimer("1");
-        //test listVoyage
-        
-        
     }
 }

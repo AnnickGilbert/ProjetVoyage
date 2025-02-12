@@ -25,7 +25,7 @@ public class VilleFenetre extends JFrame implements ActionListener {
    private JButton boutonAffichageToutesLesVilles;
    private JTextArea zoneTextListVille;
    private JScrollPane zoneDefilement;
-   private villeDAO monVilleDAO = new villeDAO();
+   private VilleDAO monVilleDAO = new VilleDAO();
 
    public VilleFenetre() {
       this.setTitle("Gestion des Villes");
@@ -64,16 +64,16 @@ public class VilleFenetre extends JFrame implements ActionListener {
    public void actionPerformed(ActionEvent ae) {
       try {
          if (ae.getSource() == this.boutonEnvoi) {
-            ville v = new ville(this.textFieldId.getText(), this.textFieldNom.getText(), this.textFieldPays.getText(), Integer.parseInt(this.textFieldCodePostal.getText()));
+            Ville v = new Ville(this.textFieldId.getText(), this.textFieldNom.getText(), this.textFieldPays.getText(), Integer.parseInt(this.textFieldCodePostal.getText()));
             int retour = this.monVilleDAO.ajouter(v);
             System.out.println("" + retour + " ligne ajout\u00e9e");
          } else if (ae.getSource() == this.boutonAffichageToutesLesVilles) {
-            List<ville> liste = this.monVilleDAO.getListeVilles();
+            List<Ville> liste = this.monVilleDAO.getListeVilles();
             this.zoneTextListVille.setText("");
             Iterator var7 = liste.iterator();
 
             while(var7.hasNext()) {
-               ville v = (ville)var7.next();
+               Ville v = (Ville)var7.next();
                this.zoneTextListVille.append(v.toString() + "\n");
             }
          }

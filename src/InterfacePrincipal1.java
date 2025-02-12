@@ -17,11 +17,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+/**
+ * Interface principale de l'application de gestion des voyages.
+ * Cette classe fournit une interface graphique permettant de visualiser, ajouter
+ * et supprimer des voyages dans une table interactive.
+ * 
+ * @author tran
+ * @version 1.0
+ */
 public class InterfacePrincipal1 extends JFrame implements ActionListener {
+    //ajouter javadoc
+
     private JPanel containerPanel;
     private JPanel contentPanel;
     private JTable table;
@@ -30,10 +38,19 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
     private JButton button;
     private List<VoyageInformation> voyageInformations;
 
+    /* Boutons pour ajouter un voyage, une réservation ou un moyen de transport */
     private JButton buttonAjouterVoyage;
     private JButton buttonAjouterReservation;
     private JButton buttonAjouterMoyenTransport;
 
+    /**
+     * Constructeur de la classe {@code InterfacePrincipal}.
+     * 
+     * <p>
+     * Ce constructeur initialise la fenêtre principale de l'application et crée
+     * les composants graphiques nécessaires pour afficher les voyages dans une table.
+     * </p>
+     */
     public InterfacePrincipal1() {
         this.setTitle("Liste des voyages");
         this.setSize(800, 600);
@@ -92,13 +109,9 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         model.addColumn("Ville de départ");
         model.addColumn("Ville d'arrivée");
         model.addColumn("<html>Date de départ<br>Date d'arrivée</html>");
-        //model.addColumn("Date d'arrivée");
         model.addColumn("<html>Heure de départ<br>Heure d'arrivée</html>");
-        //model.addColumn("Heure d'arrivée");
         model.addColumn("Transport");
         model.addColumn("Prix");
-        //model.addColumn("Nom du client");
-        //model.addColumn("Prénom du client");
         model.addColumn("Action");
 
         table = new JTable(model);
@@ -131,7 +144,7 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         table.getTableHeader().setForeground(Color.BLUE); // Modifier la couleur du texte
         table.getTableHeader().setBackground(new Color(255, 255, 255, 180)); // Modifier la couleur de fond
 
-        //table.setOpaque(false);
+        /* Ajouter scrollPane pour la table */
 
         scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(700, 300));
@@ -151,12 +164,26 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
 
         this.setContentPane(containerPanel);
     }
-
+    
+    /**
+     * Classe interne pour le rendu des boutons de suppression dans la table.
+     * Personnalise l'apparence des boutons de suppression dans chaque ligne.
+     */
     class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
         }
-
+        /**
+         * Configure l'apparence du bouton pour chaque cellule.
+         * 
+         * @param table      La table contenant le bouton
+         * @param value      La valeur à afficher
+         * @param isSelected Indique si la cellule est sélectionnée
+         * @param hasFocus   Indique si la cellule a le focus
+         * @param row        L'index de la ligne
+         * @param column     L'index de la colonne
+         * @return Le composant configuré pour l'affichage
+         */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
@@ -167,7 +194,10 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         }
     }
     
-    // Custom editor for the delete button
+     /**
+     * Classe interne pour gérer l'édition et les actions des boutons de suppression.
+     * Gère les interactions utilisateur avec les boutons de suppression.
+     */
     class ButtonEditor extends DefaultCellEditor {
         protected JButton button;
         private int targetRow;
@@ -184,7 +214,16 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
                 }
             });
         }
-
+        /**
+         * Configure le composant d'édition pour une cellule spécifique.
+         * 
+         * @param table      La table contenant la cellule
+         * @param value      La valeur à éditer
+         * @param isSelected Indique si la cellule est sélectionnée
+         * @param row        L'index de la ligne
+         * @param column     L'index de la colonne
+         * @return Le composant configuré pour l'édition
+         */
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
                 boolean isSelected, int row, int column) {
@@ -195,7 +234,12 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
             isPushed = true;
             return button;
         }
-
+        /**
+         * Gère l'action de suppression lorsque le bouton est cliqué.
+         * Affiche une boîte de dialogue de confirmation et effectue la suppression si confirmée.
+         * 
+         * @return La valeur de la cellule après édition
+         */
         @Override
         public Object getCellEditorValue() {
             if (isPushed) {
@@ -241,7 +285,12 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         }
     }
 
-
+    /**
+     * Gère les événements d'action des boutons de l'interface.
+     * Met à jour l'affichage de la table avec les données actuelles des voyages.
+     * 
+     * @param ae L'événement d'action déclenché
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == button) {
@@ -250,22 +299,30 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
             model.setRowCount(0);
             for (VoyageInformation voyageInformation : voyageInformations) {
                 model.addRow(new Object[] {
-                    voyageInformation.getVilleDepart(),
-                    voyageInformation.getVilleArrivee(),
-                    "<html>" + voyageInformation.getDateDepart() + "<br>" + voyageInformation.getDateArrivee() + "</html>",
-                    "<html>" + voyageInformation.getHeureDepart() + "<br>" + voyageInformation.getHeureArrivee() + "</html>",
-                    voyageInformation.getMoyenTransport(),
-                    voyageInformation.getPrix(),
-                    "Supprimer" // Text for delete button column
+                        voyageInformation.getVilleDepart(),
+                        voyageInformation.getVilleArrivee(),
+                        "<html>" + voyageInformation.getDateDepart() + "<br>" + voyageInformation.getDateArrivee()
+                                + "</html>",
+                        "<html>" + voyageInformation.getHeureDepart() + "<br>" + voyageInformation.getHeureArrivee()
+                                + "</html>",
+                        voyageInformation.getMoyenTransport(),
+                        voyageInformation.getPrix(),
+                        "Supprimer" // Text for delete button column
                 });
             }
-            
+
             table.setBackground(new Color(255, 253, 208, 80));
             table.setOpaque(true);
             table.setRowHeight(40);
             table.repaint();
         }
     }
+    /**
+     * Point d'entrée principal de l'application.
+     * Crée et affiche l'interface principale.
+     * 
+     * @param args Arguments de la ligne de commande (non utilisés)
+     */
     public static void main(String[] args) {
         InterfacePrincipal1 interfacePrincipal1 = new InterfacePrincipal1();
         interfacePrincipal1.setVisible(true);
