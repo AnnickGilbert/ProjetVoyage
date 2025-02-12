@@ -6,8 +6,8 @@ public class VoyageInformation {
     private String villeArrivee;
     private LocalDate dateDepart;
     private LocalDate dateArrivee;
-    private Time heureDepart;
-    private Time heureArrivee;
+    private String heureDepart;
+    private String heureArrivee;
     private String moyenTransport;
     private double prix;
     private String clientNom;
@@ -15,7 +15,7 @@ public class VoyageInformation {
     private String typeSejour;
 
     // Constructeur
-    public VoyageInformation(String villeDepart, String villeArrivee, LocalDate dateDepart, LocalDate dateArrivee, Time heureDepart, Time heureArrivee, String moyenTransport, double prix, String clientNom, String clientPrenom, String typeSejour) {
+    public VoyageInformation(String villeDepart, String villeArrivee, LocalDate dateDepart, LocalDate dateArrivee, String heureDepart, String heureArrivee, String moyenTransport, double prix, String clientNom, String clientPrenom, String typeSejour) {
         this.villeDepart = villeDepart;
         this.villeArrivee = villeArrivee;
         this.dateDepart = dateDepart;
@@ -58,7 +58,7 @@ public class VoyageInformation {
         return dateArrivee;
     }
 
-    public Time getHeureArrivee() {
+    public String getHeureArrivee() {
         return heureArrivee;
     }
 
@@ -106,11 +106,11 @@ public class VoyageInformation {
         this.typeSejour = typeSejour;
     }
 
-    public Time getHeureDepart() {
+    public String getHeureDepart() {
         return heureDepart;
     }
 
-    public void setHeureDepart(Time heureDepart) {
+    public void setHeureDepart(String heureDepart) {
         this.heureDepart = heureDepart;
     }
 

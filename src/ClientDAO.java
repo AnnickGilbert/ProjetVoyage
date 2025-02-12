@@ -17,7 +17,7 @@ public class ClientDAO {
      * Param�tres de connexion � la base de donn�es MySQL
      * URL, LOGIN et PASS sont des constantes
      */
-    static final String URL = "jdbc:mysql://localhost:3366/stocks?serverTimezone=Europe/Paris";
+    static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
     static final String LOGIN = "root";
     static final String PASS = "";
 
@@ -160,7 +160,44 @@ public class ClientDAO {
         }
         return retour;
     }
+    //get nombre de clients
+    public int getNombreClients() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int retour = 0;
 
+        // connexion à la base de données
+        try {
+            con = DriverManager.getConnection(URL, LOGIN, PASS);
+            ps = con.prepareStatement("SELECT COUNT(*) FROM client");
+
+            // on exécute la requête
+            rs = ps.executeQuery();
+            // on parcourt les lignes du résultat
+            if (rs.next()) {
+                retour = rs.getInt(1);
+            }
+
+        } catch (Exception ee) {
+            ee.printStackTrace();
+        } finally {
+            // fermeture du rs, du preparedStatement et de la connexion
+            try {
+                if (rs != null) rs.close();
+            } catch (Exception t) {
+            }
+            try {
+                if (ps != null) ps.close();
+            } catch (Exception t) {
+            }
+            try {
+                if (con != null) con.close();
+            } catch (Exception t) {
+            }
+        }
+        return retour;
+    }
     // main permettant de tester la classe
     public static void main(String[] args) throws SQLException {
 

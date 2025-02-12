@@ -17,7 +17,7 @@ public class SejourDAO {
      * Paramètres de connexion à la base de données MySQL
      * URL, LOGIN et PASS sont des constantes
      */
-    static final String URL = "jdbc:mysql://localhost:3366/stocks?serverTimezone=Europe/Paris";
+    static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
     static final String LOGIN = "root";
     static final String PASS = "";
 

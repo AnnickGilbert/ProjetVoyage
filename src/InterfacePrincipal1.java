@@ -53,6 +53,14 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         panelBouttons.add(buttonAjouterVoyage);
         panelBouttons.add(buttonAjouterReservation);
         panelBouttons.add(buttonAjouterMoyenTransport);
+        // Action sur le bouton "Ajouter un voyage"
+        buttonAjouterVoyage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Ouvrir la fenêtre pour ajouter un voyage
+                new VoyageForm();
+            }
+        });
 
         contentPanel.add(panelBouttons);
 

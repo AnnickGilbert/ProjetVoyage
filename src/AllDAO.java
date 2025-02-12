@@ -196,9 +196,19 @@ INSERT INTO `reservation` (`id`, `dateReservation`, `prix`, `client_id`, `sejour
             ps = con.prepareStatement("SELECT * FROM voyage");
             rs = ps.executeQuery();
             while (rs.next()) {
+                /*private String id;
+    `id` VARCHAR(50) NOT NULL,
+  `dateDepart` DATE NOT NULL,
+  `dateArrivee` DATE NOT NULL,
+  `heureDepart` VARCHAR(50) NOT NULL,
+  `heureArrivee` VARCHAR(50) NOT NULL,
+  `villeDepart_id` VARCHAR(50) NOT NULL,
+  `villeArrivee_id` VARCHAR(50) NOT NULL,
+  `MoyenTransport_id` VARCHAR(50) NOT NULL,*/
                 Voyage voyage = new Voyage(rs.getString("id"), rs.getDate("dateDepart").toLocalDate(),
-                        rs.getDate("dateArrivee").toLocalDate(), rs.getString("villeDepart_id"),
-                        rs.getString("villeArrivee_id"), rs.getString("MoyenTransport_id"));
+                        rs.getDate("dateArrivee").toLocalDate(), rs.getTime("heureDepart").toString(),
+                        rs.getTime("heureArrivee").toString(), rs.getString("villeDepart_id"), rs.getString("villeArrivee_id"),
+                        rs.getString("MoyenTransport_id"));
                 voyages.add(voyage);
             }
         } catch (SQLException ee) {
@@ -223,43 +233,7 @@ INSERT INTO `reservation` (`id`, `dateReservation`, `prix`, `client_id`, `sejour
         return voyages;
     }
     
-    //Faire une requete pour recuperer pour recuperer (ville de depart, ville d'arrivee, date de depart, date d'arrivee+moyen de transport, prix, client, sejour)
-    
-    /*class VoyageInformation {
-    private String villeDepart;
-    private String villeArrivee;
-    private LocalDate dateDepart;
-    private LocalDate dateArrivee;
-    private String moyenTransport;
-    private double prix;
-    private String clientNom;
-    private String clientPrenom;
-    private String typeSejour; 
-    SELECT 
-    v1.nom AS villeDepart, 
-    v2.nom AS villeArrivee, 
-    voy.dateDepart, 
-    voy.dateArrivee, 
-    mt.type AS moyenTransport, 
-    res.prix, 
-    c.nom AS clientNom, 
-    c.prenom AS clientPrenom, 
-    se.type AS typeSejour
-    FROM 
-    voyage voy
-    JOIN 
-    ville v1 ON voy.villeDepart_id = v1.id
-    JOIN 
-    ville v2 ON voy.villeArrivee_id = v2.id
-    JOIN 
-    MoyenTransport mt ON voy.MoyenTransport_id = mt.id
-    JOIN 
-    reservation res ON voy.id = res.voyage_id
-    JOIN 
-    client c ON res.client_id = c.id
-    JOIN 
-    sejour se ON res.sejour_id = se.id;
-    */
+    //une requete pour recuperer les informations des voyages
     public List<VoyageInformation> getVoyageInformations() {
         Connection con = null;
         PreparedStatement ps = null;
@@ -272,8 +246,8 @@ INSERT INTO `reservation` (`id`, `dateReservation`, `prix`, `client_id`, `sejour
     private String villeArrivee;
     private LocalDate dateDepart;
     private LocalDate dateArrivee;
-    private Time heureDepart;
-    private Time heureArrivee;
+    private String heureDepart;
+    private String heureArrivee;
     private String moyenTransport;
     private double prix;
     private String clientNom;
@@ -287,9 +261,9 @@ INSERT INTO `reservation` (`id`, `dateReservation`, `prix`, `client_id`, `sejour
             while (rs.next()) {
                 VoyageInformation voyageInformation = new VoyageInformation(rs.getString("villeDepart"),
                         rs.getString("villeArrivee"), rs.getDate("dateDepart").toLocalDate(),
-                        rs.getDate("dateArrivee").toLocalDate(), rs.getTime("heureDepart"), rs.getTime("heureArrivee"),
-                        rs.getString("moyenTransport"), rs.getDouble("prix"), rs.getString("clientNom"),
-                        rs.getString("clientPrenom"), rs.getString("typeSejour"));
+                        rs.getDate("dateArrivee").toLocalDate(), rs.getTime("heureDepart").toString(),
+                        rs.getTime("heureArrivee").toString(), rs.getString("moyenTransport"), rs.getDouble("prix"),
+                        rs.getString("clientNom"), rs.getString("clientPrenom"), rs.getString("typeSejour"));
                 voyageInformations.add(voyageInformation);
             }
 

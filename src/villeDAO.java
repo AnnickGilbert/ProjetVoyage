@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class villeDAO {
-	static final String URL = "jdbc:mysql://localhost:3366/stocks?serverTimezone=Europe/Paris";
+	static final String URL = "jdbc:mysql://localhost:3306/stocks?serverTimezone=Europe/Paris";
 
 	   static final String LOGIN = "root";
 	   static final String PASS = "";
@@ -108,12 +108,13 @@ public class villeDAO {
       List<ville> retour = new ArrayList();
 
       try {
-    	  con = DriverManager.getConnection(URL,LOGIN, PASS);
-    	  ps = con.prepareStatement("SELECT * FROM ville");
+         con = DriverManager.getConnection(URL, LOGIN, PASS);
+         ps = con.prepareStatement("SELECT * FROM ville");
          rs = ps.executeQuery();
 
-         while(rs.next()) {
-            retour.add(new ville(rs.getString("id"), rs.getString("nom"), rs.getString("pays"), rs.getInt("code_postal")));
+         while (rs.next()) {
+            retour.add(
+                  new ville(rs.getString("id"), rs.getString("nom"), rs.getString("pays"), rs.getInt("code_postal")));
          }
       } catch (Exception var22) {
          var22.printStackTrace();
@@ -143,10 +144,17 @@ public class villeDAO {
 
       return retour;
    }
+   
+   
+
+
+
+      
+
 
    public static void main(String[] args) {
       villeDAO villeDAO = new villeDAO();
-      ville v = new ville("1", "Paris", "France", 75000);
+      ville v = new ville("30", "Paris", "France", 75000);
       int retour = villeDAO.ajouter(v);
       System.out.println("" + retour + " ligne ajout\u00e9e");
       ville v2 = villeDAO.getVille("1");
