@@ -139,13 +139,17 @@ public class VoyageForm extends JFrame {
             String moyenTransportId = (String) transportComboBox.getSelectedItem();
             int index = transportComboBox.getSelectedIndex();
             String villeDepartSelected = (String) villeDepartField.getText();
+            System.out.println(villeDepartSelected);
             String villeArriveeSelected = (String) villeArriveeField.getText();
             
             // Recherche des ID de ville en fonction des noms sélectionnés
             VoyageDAO voyageDAO = new VoyageDAO();
             String[] villes = voyageDAO.listVille();
+
             String villeDepart_Id = VoyageDAO.getIdByName(villeDepartSelected);
+            //System.out.println("ddddd"+villeDepart_Id);
             String villeArrivee_Id = VoyageDAO.getIdByName(villeArriveeSelected);
+            //System.out.println(villeArrivee_Id);
             
             // Conversion de l'index du moyen de transport en ID
             switch(index){
@@ -155,9 +159,17 @@ public class VoyageForm extends JFrame {
             }
 
             // Comptage du nombre de voyages existants et création d'un nouvel objet Voyage
-            int countVoyages = voyageDAO.countVoyage();
-            String countVoyage = Integer.toString(countVoyages+1);
-            Voyage v = new Voyage(countVoyage, dateDepart, dateArrivee, heureDepart, heureArrivee, villeDepart_Id, villeArrivee_Id, moyenTransportId);
+            String maxId = voyageDAO.maxId();
+            //MaxId+1
+
+            int maxIdInt = Integer.parseInt(maxId)+1;
+
+
+
+            
+            Voyage v = new Voyage("" + maxIdInt, dateDepart, dateArrivee, heureDepart, heureArrivee, "3",
+                    "4", moyenTransportId);
+            System.out.println(v);
 
             // Envoi de l'objet Voyage à la base de données via le DAO
             voyageDAO.ajouter(v);

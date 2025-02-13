@@ -112,7 +112,7 @@ public class AjoutReservationFenetre extends JFrame {
         
         Client client = new Client(id, nom, prenom, dateNaissance, numeroTelephone);
         clientDAO.ajouter(client);
-        reservationDAO.ajouter(new Reservation("" + (nbReservations + 1), LocalDate.now(), "1000", id, "12",
+        reservationDAO.ajouter(new Reservation("" + (nbReservations + 2), LocalDate.now(), "1000", id, "1",
                 voyageSelectionne.getId()));
         
         JOptionPane.showMessageDialog(this, "Réservation effectuée pour " + client.getNom() + " au voyage " + voyageSelectionne);

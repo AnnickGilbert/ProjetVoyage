@@ -251,11 +251,69 @@ public class VoyageDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (ps != null) ps.close();
-                if (con != null) con.close();
+                if (ps != null)
+                    ps.close();
+                if (con != null)
+                    con.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+    }
+    
+    //list idVoyage
+    public String[] listIdVoyage() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String[] retour = new String[countVoyage()];
+
+        try {
+            con = DriverManager.getConnection(URL, LOGIN, PASS);
+            ps = con.prepareStatement("SELECT id FROM voyage");
+            rs = ps.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                retour[i] = rs.getString("id");
+                i++;
+            }
+        } catch (SQLException ee) {
+            ee.printStackTrace();
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return retour;
+    }
+    //Max id de listIdVoyage
+    public String maxId() {
+        String[] listId = listIdVoyage();
+        //printListIdVoyage(listId);
+        for (int i = 0; i < listId.length
+                ; i++) {
+            System.out.println(listId[i]);
+        }
+        String maxId = listId[0];
+        for (int i = 1; i < listId.length; i++) {
+            if (Integer.parseInt(listId[i]) > Integer.parseInt(maxId)) {
+                maxId = listId[i];
+            }
+        }
+        return maxId;
+    }
+
+    //test
+    public static void main(String[] args) {
+        VoyageDAO dao = new VoyageDAO();
+        
+        System.out.println(dao.maxId());
     }
 }

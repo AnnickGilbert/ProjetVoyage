@@ -3,7 +3,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -186,14 +185,52 @@ public class ReservationDAO {
             ee.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-            } catch (SQLException e) {}
+                if (rs != null)
+                    rs.close();
+            } catch (SQLException e) {
+            }
             try {
-                if (ps != null) ps.close();
-            } catch (SQLException e) {}
+                if (ps != null)
+                    ps.close();
+            } catch (SQLException e) {
+            }
             try {
-                if (con != null) con.close();
-            } catch (SQLException e) {}
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+            }
+        }
+        return retour;
+    }
+
+    public String[] getListId() {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String[] retour = new String[20];
+
+        try {
+            con = DriverManager.getConnection(URL, LOGIN, PASS);
+            ps = con.prepareStatement("SELECT id FROM reservation");
+            rs = ps.executeQuery();
+            int i = 0;
+            while (rs.next()) {
+                retour[i] = rs.getString("id");
+                i++;
+            }
+        } catch (SQLException ee) {
+            ee.printStackTrace();
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+                if (ps != null)
+                    ps.close();
+                if (con != null)
+                    con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return retour;
     }
