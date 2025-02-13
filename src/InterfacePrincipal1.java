@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -112,13 +113,19 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         model.addColumn("<html>Heure de départ<br>Heure d'arrivée</html>");
         model.addColumn("Transport");
         model.addColumn("Prix");
-        model.addColumn("Action");
+        model.addColumn("Modifier");
+        model.addColumn("Supprimer");
+
 
         table = new JTable(model);
         // Set up the delete button column
-        TableColumn deleteColumn = table.getColumnModel().getColumn(6);
+        TableColumn deleteColumn = table.getColumnModel().getColumn(7);
         deleteColumn.setCellRenderer(new ButtonRenderer());
         deleteColumn.setCellEditor(new ButtonEditor(new JCheckBox()));
+        // Set up the modify button column
+       TableColumn modifyColumn = table.getColumnModel().getColumn(6);  // Nouvelle colonne "Modifier"
+        modifyColumn.setCellRenderer(new ButtonRendererModifier());
+        modifyColumn.setCellEditor(new ButtonEditorModifier(new JCheckBox()));
 
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
@@ -143,8 +150,7 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12)); // Changer la police et la taille
         table.getTableHeader().setForeground(Color.BLUE); // Modifier la couleur du texte
         table.getTableHeader().setBackground(new Color(255, 255, 255, 180)); // Modifier la couleur de fond
-
-        /* Ajouter scrollPane pour la table */
+                /* Ajouter scrollPane pour la table */
 
         scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(700, 300));
@@ -173,6 +179,7 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
         public ButtonRenderer() {
             setOpaque(true);
         }
+
         /**
          * Configure l'apparence du bouton pour chaque cellule.
          * 
@@ -192,98 +199,166 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
             setForeground(Color.WHITE);
             return this;
         }
+
     }
     
-     /**
-     * Classe interne pour gérer l'édition et les actions des boutons de suppression.
-     * Gère les interactions utilisateur avec les boutons de suppression.
-     */
-    class ButtonEditor extends DefaultCellEditor {
-        protected JButton button;
-        private int targetRow;
-        private boolean isPushed;
-
-        public ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    fireEditingStopped();
-                }
-            });
-        }
-        /**
-         * Configure le composant d'édition pour une cellule spécifique.
-         * 
-         * @param table      La table contenant la cellule
-         * @param value      La valeur à éditer
-         * @param isSelected Indique si la cellule est sélectionnée
-         * @param row        L'index de la ligne
-         * @param column     L'index de la colonne
-         * @return Le composant configuré pour l'édition
-         */
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            button.setText("Supprimer");
-            button.setBackground(new Color(255, 99, 71));
-            button.setForeground(Color.WHITE);
-            targetRow = row;
-            isPushed = true;
-            return button;
-        }
-        /**
-         * Gère l'action de suppression lorsque le bouton est cliqué.
-         * Affiche une boîte de dialogue de confirmation et effectue la suppression si confirmée.
-         * 
-         * @return La valeur de la cellule après édition
-         */
-        @Override
-        public Object getCellEditorValue() {
-            if (isPushed) {
-                // Show confirmation dialog
-                int response = JOptionPane.showConfirmDialog(
-                    button,
-                    "Voulez-vous vraiment supprimer ce voyage ?",
-                    "Confirmation de suppression",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-                );
-                
-                if (response == JOptionPane.YES_OPTION) {
-                    // Delete from database
-                    VoyageInformation voyageToDelete = voyageInformations.get(targetRow);
-                    
-                    VoyageDAO voyageDAO = new VoyageDAO();
-                    voyageDAO.supprimer(voyageToDelete.getId());
-                    boolean deleted = true; // Dummy value for testing
-                    if (deleted) {
-                        // Remove from the table
-                        ((DefaultTableModel)table.getModel()).removeRow(targetRow);
-                        // Remove from the list
-                        voyageInformations.remove(targetRow);
-                    } else {
-                        JOptionPane.showMessageDialog(
-                            button,
-                            "Erreur lors de la suppression du voyage",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-                }
-            }
-            isPushed = false;
-            return null;
+    class ButtonRendererModifier extends JButton implements TableCellRenderer {
+        public ButtonRendererModifier() {
+            setOpaque(true);
         }
 
         @Override
-        public boolean stopCellEditing() {
-            isPushed = false;
-            return super.stopCellEditing();
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            setText("Modifier");
+            setBackground(new Color(70, 130, 180)); // Bleu pour le bouton Modifier
+            setForeground(Color.WHITE);
+            return this;
         }
     }
+
+    /**
+     * Classe interne pour gérer l'édition et les actions des boutons de modification.
+     * Gère les interactions utilisateur avec les boutons de modification.
+     */
+class ButtonEditorModifier extends DefaultCellEditor {
+    protected JButton button;
+    private int targetRow;
+    private boolean isPushed;
+
+    public ButtonEditorModifier(JCheckBox checkBox) {
+        super(checkBox);
+        button = new JButton();
+        button.setOpaque(true);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fireEditingStopped();
+            }
+        });
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value,
+            boolean isSelected, int row, int column) {
+        button.setText("Modifier");
+        button.setBackground(new Color(70, 130, 180));
+        button.setForeground(Color.WHITE);
+        targetRow = row;
+        isPushed = true;
+        return button;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        if (isPushed) {
+            // Code pour ouvrir un formulaire de modification ou une nouvelle fenêtre
+            //VoyageInformation voyageToEdit = voyageInformations.get(targetRow);
+
+            // Par exemple, ouvrir une fenêtre pour modifier le voyage
+            new VoyageForm();
+
+            // Vous pouvez ajouter ici le code pour mettre à jour les informations dans la base de données si nécessaire.
+        }
+        isPushed = false;
+        return null;
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        isPushed = false;
+        return super.stopCellEditing();
+    }
+}
+
+    
+/**
+* Classe interne pour gérer l'édition et les actions des boutons de suppression.
+* Gère les interactions utilisateur avec les boutons de suppression.
+*/
+ class ButtonEditor extends DefaultCellEditor {
+    protected JButton button;
+    private int targetRow;
+    private boolean isPushed;
+    private JTable table;  // Ajout d'une référence à la table
+
+    public ButtonEditor(JCheckBox checkBox) {
+        super(checkBox);
+        button = new JButton();
+        button.setOpaque(true);
+        button.addActionListener(e -> fireEditingStopped());
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value,
+            boolean isSelected, int row, int column) {
+        this.table = table;  // Sauvegarde de la référence à la table
+        button.setText("Supprimer");
+        button.setBackground(new Color(255, 99, 71));
+        button.setForeground(Color.WHITE);
+        targetRow = row;
+        isPushed = true;
+        return button;
+    }
+
+    @Override
+    public Object getCellEditorValue() {
+        if (isPushed) {
+            System.out.println("Bouton Supprimer cliqué pour la ligne : " + targetRow);
+            int response = JOptionPane.showConfirmDialog(
+                SwingUtilities.getWindowAncestor(button),
+                "Voulez-vous vraiment supprimer ce voyage ?",
+                "Confirmation de suppression",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (response == JOptionPane.YES_OPTION) {
+                try {
+                    // Récupérer le modèle de la table
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    
+                    // Supprimer de la base de données
+                    VoyageInformation voyageToDelete = voyageInformations.get(targetRow);
+                    VoyageDAO voyageDAO = new VoyageDAO();
+                    voyageDAO.supprimer(voyageToDelete.getId());
+                    
+                    // Supprimer de la liste des voyages
+                    voyageInformations.remove(targetRow);
+                    System.out.println("Élément supprimé de la liste. Taille actuelle : " + voyageInformations.size());
+                    
+                    // Supprimer la ligne de la table
+                    SwingUtilities.invokeLater(() -> {
+                        model.removeRow(targetRow);
+                        System.out.println("Ligne supprimée de la table.");
+                        table.revalidate();
+                        table.repaint();
+                    });
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(
+                        button,
+                        "Erreur lors de la suppression : " + e.getMessage(),
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        }
+        isPushed = false;
+        return null;
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+        isPushed = false;
+        return super.stopCellEditing();
+    }
+
+    @Override
+    protected void fireEditingStopped() {
+        super.fireEditingStopped();
+    }
+}
 
     /**
      * Gère les événements d'action des boutons de l'interface.
@@ -299,16 +374,16 @@ public class InterfacePrincipal1 extends JFrame implements ActionListener {
             model.setRowCount(0);
             for (VoyageInformation voyageInformation : voyageInformations) {
                 model.addRow(new Object[] {
-                        voyageInformation.getVilleDepart(),
-                        voyageInformation.getVilleArrivee(),
-                        "<html>" + voyageInformation.getDateDepart() + "<br>" + voyageInformation.getDateArrivee()
-                                + "</html>",
-                        "<html>" + voyageInformation.getHeureDepart() + "<br>" + voyageInformation.getHeureArrivee()
-                                + "</html>",
-                        voyageInformation.getMoyenTransport(),
-                        voyageInformation.getPrix(),
-                        "Supprimer" // Text for delete button column
-                });
+                voyageInformation.getVilleDepart(),
+                voyageInformation.getVilleArrivee(),
+                "<html>" + voyageInformation.getDateDepart() + "<br>" + voyageInformation.getDateArrivee() + "</html>",
+                "<html>" + voyageInformation.getHeureDepart() + "<br>" + voyageInformation.getHeureArrivee() + "</html>",
+                voyageInformation.getMoyenTransport(),
+                voyageInformation.getPrix(),
+                "Supprimer", // Text for delete button column
+                "Modifier"   // Text for modify button column
+            });
+
             }
 
             table.setBackground(new Color(255, 253, 208, 80));
